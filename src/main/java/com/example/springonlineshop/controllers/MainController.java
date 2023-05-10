@@ -2,14 +2,17 @@ package com.example.springonlineshop.controllers;
 import com.example.springonlineshop.models.Person;
 import com.example.springonlineshop.security.PersonDetails;
 import com.example.springonlineshop.services.PersonService;
+import com.example.springonlineshop.services.ProductService;
 import com.example.springonlineshop.utils.PersonValidator;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -17,22 +20,31 @@ public class MainController {
     private final PersonValidator personValidator;
     private final PersonService personService;
 
-    public MainController(PersonValidator personValidator, PersonService personService) {
+    private final ProductService productService;
+
+
+    public MainController(PersonValidator personValidator, PersonService personService, ProductService productService) {
         this.personValidator = personValidator;
         this.personService = personService;
+        this.productService = productService;
     }
 
-    @GetMapping("/index")
-    public String index(){
+    @GetMapping("/person_account")
+    public String index(Model model){
         // Получаем объект аутентификации -> с помощью SpringContextHolder обращаемся к контексту и на нем вызываем метод аутентификации. Из сессии текущего пользователя получаем объект, который был положен в данную сессию после аутентификации пользователя
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        System.out.println(personDetails.getPerson());
-        System.out.println("ID пользователя: " + personDetails.getPerson().getId());
-        System.out.println("Логин пользователя: " + personDetails.getPerson().getLogin());
-        System.out.println("Пароль пользователя: " + personDetails.getPerson().getPassword());
-        System.out.println(personDetails);
-        return "index";
+        String role = personDetails.getPerson().getRole();
+        if(role.equals("ROLE_ADMIN")){
+            return "redirect:/admin";
+        }
+//        System.out.println(personDetails.getPerson());
+//        System.out.println("ID пользователя: " + personDetails.getPerson().getId());
+//        System.out.println("Логин пользователя: " + personDetails.getPerson().getLogin());
+//        System.out.println("Пароль пользователя: " + personDetails.getPerson().getPassword());
+//        System.out.println(personDetails);
+        model.addAttribute("products", productService.getAllProduct());
+        return "/user/index";
     }
 
     //    @GetMapping("/registration")
@@ -53,6 +65,13 @@ public class MainController {
             return "registration";
         }
         personService.register(person);
-        return "redirect:/index";
+        return "redirect:/person_account";
+    }
+
+
+    @GetMapping("/person_account/product/info/{id}")
+    public String infoProduct(@PathVariable("id") int id, Model model){
+        model.addAttribute("product", productService.getProductId(id));
+        return "/user/infoProduct";
     }
 }

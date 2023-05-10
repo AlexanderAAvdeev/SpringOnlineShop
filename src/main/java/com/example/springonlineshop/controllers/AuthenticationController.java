@@ -1,4 +1,5 @@
 package com.example.springonlineshop.controllers;
+import com.example.springonlineshop.repositories.CategoryRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
