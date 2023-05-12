@@ -47,12 +47,20 @@ public class Product {
         image.setProduct(this);
         imageList.add(image);
     }
+    //Связь много ко многим для корзины покупок, создается промежуточная таблица "product_cart"
+    @ManyToMany
+    @JoinTable(name = "product_cart", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private List<Person> personList;
 
     //Данный метод заполняет поле даты и времени при создании объекта класса
     @PrePersist
     private void init(){
         dateTime = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    private List<Order> orderList;
+
 
     public Product(String title, String description, float price, String warehouse, String seller, Category category, LocalDateTime dateTime, List<Image> imageList) {
         this.title = title;
