@@ -5,16 +5,15 @@
     <title>Информация о товаре</title>
 </head>
 <body>
-<h3>Информация о товаре</h3>
+<h3>Информация о товаре: </h3>
 <p th:text="'Наименование: ' + ${product.getTitle()}"></p>
 <p th:text="'Описание: ' + ${product.getDescription()}"></p>
 <p th:text="'Цена: ' + ${product.getPrice()}"></p>
-<p th:text="'Склад: ' + ${product.getWarehouse()}"></p>
+<p th:text="'Cклад: ' + ${product.getWarehouse()}"></p>
 <p th:text="'Продавец: ' + ${product.getSeller()}"></p>
 <p th:text="'Категория: ' + ${product.getCategory().getName()}"></p>
 <div th:each="img : ${product.getImageList()}">
-  <img th:src="'/img/' + ${img.getFileName()}">
+    <img th:src="'/img/' + ${img.getFileName()}">
 </div>
-
 </body>
 </html>

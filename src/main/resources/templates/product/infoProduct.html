@@ -3,18 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Информация о товаре</title>
+    <link href="/css/infoProductStyle.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-<h3>Информация о товаре</h3>
-<p th:text="'Наименование: ' + ${product.getTitle()}"></p>
-<p th:text="'Описание: ' + ${product.getDescription()}"></p>
-<p th:text="'Цена: ' + ${product.getPrice()}"></p>
-<p th:text="'Склад: ' + ${product.getWarehouse()}"></p>
-<p th:text="'Продавец: ' + ${product.getSeller()}"></p>
-<p th:text="'Категория: ' + ${product.getCategory().getName()}"></p>
-<div th:each="img : ${product.getImageList()}">
-  <img th:src="'/img/' + ${img.getFileName()}">
+<div class="product-details">
+    <div class="product-images">
+        <img class="product-image-main" th:src="'/img/' + ${product.getImageList()[0].getFileName()}" alt="Product Image" onclick="enlargeImage(this);">
+    </div>
+    <div class="product-info">
+        <h1 class="product-title" th:text="${product.getTitle()}"></h1>
+        <p class="product-description" th:text="${product.getDescription()}"></p>
+        <p class="product-price" th:text="'Цена: ' + ${product.getPrice()}"></p>
+        <p class="product-warehouse" th:text="'Склад: ' + ${product.getWarehouse()}"></p>
+        <p class="product-seller" th:text="'Продавец: ' + ${product.getSeller()}"></p>
+        <p class="product-category" th:text="'Категория: ' + ${product.getCategory().getName()}"></p>
+    </div>
 </div>
+<div class="product-image-list">
+    <div class="product-image-item" th:each="img: ${product.getImageList()}">
+        <img class="product-image" th:src="'/img/' + ${img.getFileName()}" alt="Product Image" onclick="enlargeImage(this);">
+    </div>
+</div>
+
+<div class="enlarged-image-overlay" onclick="hideEnlargedImage();">
+    <img class="enlarged-image" src="" alt="Enlarged Image">
+</div>
+
+<script>
+    function enlargeImage(image) {
+        var src = image.src;
+        var enlargedImage = document.querySelector('.enlarged-image');
+        enlargedImage.src = src;
+        var overlay = document.querySelector('.enlarged-image-overlay');
+        overlay.style.display = 'flex';
+    }
+
+    function hideEnlargedImage() {
+        var overlay = document.querySelector('.enlarged-image-overlay');
+        overlay.style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
