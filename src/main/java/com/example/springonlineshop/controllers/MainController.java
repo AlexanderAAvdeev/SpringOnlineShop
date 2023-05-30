@@ -84,7 +84,7 @@ public class MainController {
     }
 
 
-    @GetMapping("/person_account/product/info/{id}")
+    @GetMapping("person_account/product/info/{id}")
     public String infoProduct(@PathVariable("id") int id, Model model){
         model.addAttribute("product", productService.getProductId(id));
         return "/user/infoProduct";

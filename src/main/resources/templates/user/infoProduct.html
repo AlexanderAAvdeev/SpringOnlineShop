@@ -14,6 +14,8 @@
 <p th:text="'Категория: ' + ${product.getCategory().getName()}"></p>
 <div th:each="img : ${product.getImageList()}">
     <img th:src="'/img/' + ${img.getFileName()}">
+    <a th:href="@{/cart/add/{id}(id=${product.getId()})}">Добавить товар в корзину</a>
+    <hr>
 </div>
 </body>
 </html>
